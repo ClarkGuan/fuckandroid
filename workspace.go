@@ -15,6 +15,12 @@ func MakeWorkspace(name, dir string) (err error) {
 	if err = os.MkdirAll(rootDir, 0775); err != nil {
 		return
 	}
+	if err = os.MkdirAll(filepath.Join(rootDir, "buildsystem"), 0775); err != nil {
+		return
+	}
+	if err = os.MkdirAll(filepath.Join(rootDir, "workspace"), 0775); err != nil {
+		return
+	}
 	var box *rice.Box
 	box, err = rice.FindBox("data")
 	if err != nil {
@@ -48,14 +54,6 @@ func MakeWorkspace(name, dir string) (err error) {
 		return
 	}
 
-	if err = os.MkdirAll(filepath.Join(rootDir, "buildsystem"), 0775); err != nil {
-		return
-	}
-
-	if err = os.MkdirAll(filepath.Join(rootDir, "workspace"), 0775); err != nil {
-		return
-	}
-
 	return
 }
 
@@ -81,7 +79,8 @@ func boxCopy(box *rice.Box, dir, name string, perm os.FileMode) error {
 }
 
 func boxCopyTemplate(box *rice.Box, dir, name string, perm os.FileMode, holder map[string]string) error {
-	tmpl := template.Must(template.ParseGlob(box.MustString(name)))
+	tmpl := template.New(name)
+	tmpl, _ = tmpl.Parse(box.MustString(name))
 	output, err := os.OpenFile(filepath.Join(dir, name), os.O_CREATE|os.O_WRONLY|os.O_TRUNC, perm)
 	if err != nil {
 		return err

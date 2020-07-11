@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	fa "github.com/ClarkGuan/fuckandroid"
 )
@@ -16,6 +17,8 @@ func main() {
 	switch os.Args[1] {
 	case "workspace":
 		makeWorkspace(os.Args[2:])
+	default:
+		fmt.Fprintln(os.Stderr, "Unknown sub-command:", strconv.Quote(os.Args[1]))
 	}
 }
 

@@ -1,11 +1,8 @@
 package fa
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
-	"strings"
-	"text/template"
 
 	rice "github.com/GeertJohan/go.rice"
 )
@@ -27,7 +24,26 @@ func MakeWorkspace(name, dir string) (err error) {
 		return
 	}
 
-	list := []*struct {
+	listFix := func(l []*struct {
+		name string
+		perm os.FileMode
+	}) (ret []*struct {
+		from string
+		to   string
+		perm os.FileMode
+	}) {
+		for _, i := range l {
+			s := struct {
+				from string
+				to   string
+				perm os.FileMode
+			}{i.name, filepath.Join(rootDir, i.name), i.perm}
+			ret = append(ret, &s)
+		}
+		return
+	}
+
+	list := listFix([]*struct {
 		name string
 		perm os.FileMode
 	}{
@@ -38,55 +54,23 @@ func MakeWorkspace(name, dir string) (err error) {
 		{"gradle.properties", 0664},
 		{"gradlew", 0774},
 		{"gradlew.bat", 0664},
-	}
+	})
 
-	if err = boxCopyAll(list, box, rootDir); err != nil {
+	if err = boxCopyAll(list, box); err != nil {
 		return
 	}
 
-	if err = boxCopyTemplate(box, rootDir, "local.properties", 0664,
+	if err = boxCopyTemplate(box, "local.properties", filepath.Join(rootDir, "local.properties"), 0664,
 		map[string]string{"AndroidSdkHome": androidHome()}); err != nil {
 		return
 	}
 
-	if err = boxCopyTemplate(box, rootDir, "settings.gradle", 0664,
+	if err = boxCopyTemplate(box, "settings.gradle", filepath.Join(rootDir, "settings.gradle"), 0664,
 		map[string]string{"RootProjectName": name}); err != nil {
 		return
 	}
 
 	return
-}
-
-func boxCopyAll(list []*struct {
-	name string
-	perm os.FileMode
-}, box *rice.Box, dir string) error {
-	for _, entry := range list {
-		if strings.Contains(entry.name, "/") {
-			if err := os.MkdirAll(filepath.Dir(filepath.Join(dir, entry.name)), 0775); err != nil {
-				return err
-			}
-		}
-		if err := boxCopy(box, dir, entry.name, entry.perm); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func boxCopy(box *rice.Box, dir, name string, perm os.FileMode) error {
-	return ioutil.WriteFile(filepath.Join(dir, name), box.MustBytes(name), perm)
-}
-
-func boxCopyTemplate(box *rice.Box, dir, name string, perm os.FileMode, holder map[string]string) error {
-	tmpl := template.New(name)
-	tmpl, _ = tmpl.Parse(box.MustString(name))
-	output, err := os.OpenFile(filepath.Join(dir, name), os.O_CREATE|os.O_WRONLY|os.O_TRUNC, perm)
-	if err != nil {
-		return err
-	}
-	defer output.Close()
-	return tmpl.Execute(output, holder)
 }
 
 func androidHome() string {

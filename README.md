@@ -11,7 +11,7 @@ $ go get github.com/ClarkGuan/fuckandroid/...
 ### 1. 创建 Android 工作区目录
 
 ```bash
-$ fuckandroid init [-p 父目录路径] hello
+$ fuckandroid init [-p 父目录路径] workspaceName
 ```
 
 即可创建如下 Android 工作区：

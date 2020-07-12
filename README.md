@@ -11,7 +11,7 @@ $ go get github.com/ClarkGuan/fuckandroid/...
 ### 1. 创建 Android 工作区目录
 
 ```bash
-$ fuckandroid init [-p dir] hello
+$ fuckandroid init [-p 父目录路径] hello
 ```
 
 即可创建如下 Android 工作区：
@@ -38,5 +38,5 @@ $ fuckandroid init [-p dir] hello
 ### 2. 创建 Android Application 子工程
 
 ```bash
-$ fuckandroid new 
+$ fuckandroid newapp [-p 包含 workspace 目录路径] [-name 程序显示名称] [-id 程序唯一ID] projectPath
 ```

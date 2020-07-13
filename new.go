@@ -276,7 +276,7 @@ func checkWorkspaceDir(dir string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	for len(absPath) > 0 {
+	for len(absPath) > 1 {
 		ws := filepath.Join(absPath, "workspace")
 		if _, err := os.Stat(ws); err == nil {
 			if _, err = os.Stat(filepath.Join(absPath, "settings.gradle")); err == nil {

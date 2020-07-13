@@ -1,7 +1,6 @@
 package fa
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,9 +8,6 @@ import (
 
 	rice "github.com/GeertJohan/go.rice"
 )
-
-var errNoWorkspace = errors.New("no workspace directory found")
-var errAlreadyExist = errors.New("path already exist")
 
 type ApplicationPro struct {
 	Name  string

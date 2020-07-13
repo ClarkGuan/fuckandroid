@@ -1,6 +1,7 @@
 package fa
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -8,6 +9,9 @@ import (
 
 	rice "github.com/GeertJohan/go.rice"
 )
+
+var errNoWorkspace = errors.New("no workspace directory found")
+var errAlreadyExist = errors.New("path already exist")
 
 func boxCopyAll(list []*struct {
 	from string

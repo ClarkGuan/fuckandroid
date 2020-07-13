@@ -9,6 +9,11 @@ import (
 
 func MakeWorkspace(name, dir string) (err error) {
 	rootDir := filepath.Join(dir, name)
+
+	if _, err = os.Stat(rootDir); !os.IsNotExist(err) {
+		return errAlreadyExist
+	}
+
 	if err = os.MkdirAll(rootDir, 0775); err != nil {
 		return
 	}

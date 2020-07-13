@@ -54,13 +54,13 @@ hello/
 ### 2. 创建 Android Application 子工程
 
 ```bash
-$ fuckandroid app [-p 包含 workspace 目录路径] [-name 程序显示名称] [-id 程序唯一ID] projectPath
+$ fuckandroid app [-p 包含 workspace 目录路径] [-name 程序显示名称] [-id 程序唯一ID] [-nokotlin] projectPath
 ```
 
 例如
 
 ```bash
-$ fuckandroid app -name 你好 -id com.clark.app.hello hello
+$ fuckandroid app -name 你好 -id com.clark.app.hello -nokotlin hello
 ```
 
 生成文件如下：
@@ -156,41 +156,18 @@ workspace/mylib
 8 directories, 4 files
 ```
 
-### 4. 创建 Java Library 子工程
+### 4. 创建 Java or Kotlin Library 子工程
 
 ```bash
-$ fuckandroid javalib [-p 包含 workspace 目录路径] projectPath
+$ fuckandroid noandroidlib [-p 包含 workspace 目录路径] [-nokotlin] projectPath
 ```
 
 例如
 
 ```bash
-$ fuckandroid newjavalib myjavalib
+$ fuckandroid noandroidlib -nokotlin myjavalib
 $ tree -p workspace/myjavalib/
 workspace/myjavalib/
-├── [-rw-rw-r--]  build.gradle
-├── [drwxrwxr-x]  libs
-└── [drwxrwxr-x]  src
-    ├── [drwxrwxr-x]  main
-    │   └── [drwxrwxr-x]  java
-    └── [drwxrwxr-x]  test
-        └── [drwxrwxr-x]  java
-
-6 directories, 1 file
-```
-
-### 5. 创建 Kotlin Library 子工程
-
-```bash
-$ fuckandroid kotlinlib [-p 包含 workspace 目录路径] projectPath
-```
-
-例如
-
-```bash
-$ fuckandroid kotlinlib mykotlinlib
-$ tree -p workspace/mykotlinlib/
-workspace/mykotlinlib/
 ├── [-rw-rw-r--]  build.gradle
 ├── [drwxrwxr-x]  libs
 └── [drwxrwxr-x]  src

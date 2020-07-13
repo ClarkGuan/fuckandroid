@@ -27,11 +27,8 @@ func main() {
 	case "lib":
 		makeAndroidLibrary(os.Args[2:], cmd)
 
-	case "javalib":
-		makePlainLibrary(os.Args[2:], cmd, false)
-
-	case "kotlinlib":
-		makePlainLibrary(os.Args[2:], cmd, true)
+	case "noandroidlib":
+		makePlainLibrary(os.Args[2:], cmd)
 
 	default:
 		fmt.Fprintln(os.Stderr, "Unknown sub-command:", strconv.Quote(os.Args[1]))
@@ -67,9 +64,11 @@ func makeAndroidApplication(args []string, cmd string) {
 	var name string
 	var appID string
 	var relativePath string
+	var nokotlin bool
 	appFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
 	appFlagSet.StringVar(&name, "name", "", "Display name of application")
 	appFlagSet.StringVar(&appID, "id", "com.demo.app", "Id of android application. Default: \"com.demo.app\"")
+	appFlagSet.BoolVar(&nokotlin, "nokotlin", false, "not using kotlin")
 	appFlagSet.Parse(args)
 
 	appArgs := appFlagSet.Args()
@@ -82,7 +81,7 @@ func makeAndroidApplication(args []string, cmd string) {
 	if len(name) == 0 {
 		name = filepath.Base(relativePath)
 	}
-	if err := fa.MakeAndroidApplication(dir, fa.ApplicationPro{Name: name, AppID: appID, Path: relativePath}); err != nil {
+	if err := fa.MakeAndroidApplication(dir, fa.ApplicationPro{Name: name, AppID: appID, Path: relativePath, Kotlin: !nokotlin}); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -110,11 +109,13 @@ func makeAndroidLibrary(args []string, cmd string) {
 	}
 }
 
-func makePlainLibrary(args []string, cmd string, kotlin bool) {
+func makePlainLibrary(args []string, cmd string) {
 	libFlagSet := flag.NewFlagSet(fmt.Sprintf("fuckandroid %s", cmd), flag.ExitOnError)
 	var dir string
+	var nokotlin bool
 	var relativePath string
 	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
+	libFlagSet.BoolVar(&nokotlin, "nokotlin", false, "not using kotlin")
 	libFlagSet.Parse(args)
 
 	appArgs := libFlagSet.Args()
@@ -124,7 +125,7 @@ func makePlainLibrary(args []string, cmd string, kotlin bool) {
 		os.Exit(1)
 	}
 	relativePath = appArgs[0]
-	if err := fa.MakePlainLibrary(dir, relativePath, kotlin); err != nil {
+	if err := fa.MakePlainLibrary(dir, relativePath, !nokotlin); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

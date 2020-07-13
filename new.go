@@ -39,12 +39,8 @@ func MakePlainLibrary(dir, path string, kotlin bool) (err error) {
 		return
 	}
 
-	var from = "javalib/build.gradle"
-	if kotlin {
-		from = "kotlinlib/build.gradle"
-	}
-
-	if err = boxCopy(box, from, filepath.Join(libPath, "build.gradle"), 0664); err != nil {
+	if err = boxCopyTemplate(box, "noandroidlib/build.gradle", filepath.Join(libPath, "build.gradle"), 0664,
+		map[string]string{"Kotlin": parseBoolean(kotlin)}); err != nil {
 		return
 	}
 
@@ -139,9 +135,10 @@ func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
 }
 
 type ApplicationPro struct {
-	Name  string
-	AppID string
-	Path  string
+	Name   string
+	AppID  string
+	Path   string
+	Kotlin bool
 }
 
 func (app *ApplicationPro) GetPath() string {
@@ -243,14 +240,22 @@ func MakeAndroidApplication(dir string, app ApplicationPro) error {
 
 	if err = boxCopyTemplate(box, "app/build.gradle",
 		filepath.Join(appPath, "build.gradle"), 0664,
-		map[string]string{"AndroidApplicationID": app.AppID}); err != nil {
+		map[string]string{"AndroidApplicationID": app.AppID, "Kotlin": parseBoolean(app.Kotlin)}); err != nil {
 		return err
 	}
 
-	if err = boxCopyTemplate(box, "app/src/main/java/MainActivity.java",
-		filepath.Join(appPath, fmt.Sprintf("src/main/java/%s/MainActivity.java", strings.ReplaceAll(app.AppID, ".", "/"))),
-		0664, map[string]string{"AndroidApplicationID": app.AppID}); err != nil {
-		return err
+	if app.Kotlin {
+		if err = boxCopyTemplate(box, "app/src/main/java/MainActivity.kt",
+			filepath.Join(appPath, fmt.Sprintf("src/main/java/%s/MainActivity.kt", strings.ReplaceAll(app.AppID, ".", "/"))),
+			0664, map[string]string{"AndroidApplicationID": app.AppID}); err != nil {
+			return err
+		}
+	} else {
+		if err = boxCopyTemplate(box, "app/src/main/java/MainActivity.java",
+			filepath.Join(appPath, fmt.Sprintf("src/main/java/%s/MainActivity.java", strings.ReplaceAll(app.AppID, ".", "/"))),
+			0664, map[string]string{"AndroidApplicationID": app.AppID}); err != nil {
+			return err
+		}
 	}
 
 	if err = appendSubProject(filepath.Join(workspace, "../settings.gradle"), appPath); err != nil {
@@ -296,4 +301,11 @@ func gradleDir(s string) string {
 	index := strings.Index(s, "workspace")
 	s = s[index:]
 	return strings.ReplaceAll(s, "/", ":")
+}
+
+func parseBoolean(b bool) string {
+	if b {
+		return "true"
+	}
+	return ""
 }

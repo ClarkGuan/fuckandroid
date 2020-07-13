@@ -123,4 +123,4 @@ $ ./gradlew installDebug
 
 如图：
 
-[alt Android设备截图](doc/device-img.png)
+![alt Android设备截图](doc/device-img.png)

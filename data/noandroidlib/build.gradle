@@ -6,6 +6,6 @@ targetCompatibility = "1.7"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar']){{if .Kotlin}}
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"{{end}}
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"{{end}}
     testImplementation "junit:junit:$junit_version"
 }

@@ -13,6 +13,8 @@ import (
 var errNoWorkspace = errors.New("no workspace directory found")
 var errAlreadyExist = errors.New("path already exist")
 
+//var errIsAbsPath = errors.New("input is absolute path")
+
 func makeDirs(dirs ...string) error {
 	for _, dir := range dirs {
 		if err := os.MkdirAll(dir, 0775); err != nil {

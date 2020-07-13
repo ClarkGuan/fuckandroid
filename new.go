@@ -9,6 +9,47 @@ import (
 	rice "github.com/GeertJohan/go.rice"
 )
 
+func MakeJavaLibrary(dir, path string) (err error) {
+	if filepath.IsAbs(path) {
+		return fmt.Errorf("%q is absolute path", path)
+	}
+
+	var workspace string
+	workspace, err = checkWorkspaceDir(dir)
+	if err != nil {
+		return err
+	}
+
+	libPath := filepath.Join(workspace, path)
+	if _, err := os.Stat(libPath); !os.IsNotExist(err) {
+		return errAlreadyExist
+	}
+
+	var box *rice.Box
+	box, err = rice.FindBox("data")
+	if err != nil {
+		return err
+	}
+
+	if err = makeDirs(
+		filepath.Join(libPath, "libs"),
+		filepath.Join(libPath, "src/test/java"),
+		filepath.Join(libPath, "src/main/java"),
+	); err != nil {
+		return
+	}
+
+	if err = boxCopy(box, "javalib/build.gradle", filepath.Join(libPath, "build.gradle"), 0664); err != nil {
+		return
+	}
+
+	if err = appendSubProject(filepath.Join(workspace, "../settings.gradle"), libPath); err != nil {
+		return
+	}
+
+	return
+}
+
 type LibraryPro struct {
 	Package string
 	Path    string
@@ -19,6 +60,10 @@ func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
 	workspace, err = checkWorkspaceDir(dir)
 	if err != nil {
 		return err
+	}
+
+	if filepath.IsAbs(lib.Path) {
+		return fmt.Errorf("%q is absolute path", lib.Path)
 	}
 
 	libPath := filepath.Join(workspace, lib.Path)
@@ -105,6 +150,10 @@ func MakeAndroidApplication(dir string, app ApplicationPro) error {
 	workspace, err := checkWorkspaceDir(dir)
 	if err != nil {
 		return err
+	}
+
+	if filepath.IsAbs(app.GetPath()) {
+		return fmt.Errorf("%q is absolute path", app.GetPath())
 	}
 
 	appPath := filepath.Join(workspace, app.GetPath())

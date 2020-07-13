@@ -157,3 +157,26 @@ workspace/mylib
 8 directories, 4 files
 ```
 
+### 4. 创建 Java Library 子工程
+
+```bash
+$ fuckandroid newjavalib [-p 包含 workspace 目录路径] projectPath
+```
+
+例如
+
+```bash
+$ fuckandroid newjavalib myjavalib
+$ tree -p workspace/myjavalib/
+workspace/myjavalib/
+├── [-rw-rw-r--]  build.gradle
+├── [drwxrwxr-x]  libs
+└── [drwxrwxr-x]  src
+    ├── [drwxrwxr-x]  main
+    │   └── [drwxrwxr-x]  java
+    └── [drwxrwxr-x]  test
+        └── [drwxrwxr-x]  java
+
+6 directories, 1 file
+```
+

@@ -13,6 +13,15 @@ import (
 var errNoWorkspace = errors.New("no workspace directory found")
 var errAlreadyExist = errors.New("path already exist")
 
+func makeDirs(dirs ...string) error {
+	for _, dir := range dirs {
+		if err := os.MkdirAll(dir, 0775); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func boxCopyAll(list []*struct {
 	from string
 	to   string

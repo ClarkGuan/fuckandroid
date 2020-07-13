@@ -14,15 +14,13 @@ func MakeWorkspace(name, dir string) (err error) {
 		return errAlreadyExist
 	}
 
-	if err = os.MkdirAll(rootDir, 0775); err != nil {
+	if err = makeDirs(
+		filepath.Join(rootDir, "buildsystem"),
+		filepath.Join(rootDir, "workspace"),
+	); err != nil {
 		return
 	}
-	if err = os.MkdirAll(filepath.Join(rootDir, "buildsystem"), 0775); err != nil {
-		return
-	}
-	if err = os.MkdirAll(filepath.Join(rootDir, "workspace"), 0775); err != nil {
-		return
-	}
+
 	var box *rice.Box
 	box, err = rice.FindBox("data")
 	if err != nil {

@@ -9,6 +9,85 @@ import (
 	rice "github.com/GeertJohan/go.rice"
 )
 
+type LibraryPro struct {
+	Package string
+	Path    string
+}
+
+func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
+	var workspace string
+	workspace, err = checkWorkspaceDir(dir)
+	if err != nil {
+		return err
+	}
+
+	libPath := filepath.Join(workspace, lib.Path)
+	if _, err := os.Stat(libPath); !os.IsNotExist(err) {
+		return errAlreadyExist
+	}
+
+	var box *rice.Box
+	box, err = rice.FindBox("data")
+	if err != nil {
+		return err
+	}
+
+	if err = makeDirs(
+		filepath.Join(libPath, "libs"),
+		filepath.Join(libPath, "src/androidTest/java"),
+		filepath.Join(libPath, "src/test/java"),
+		filepath.Join(libPath, "src/main/java"),
+	); err != nil {
+		return
+	}
+
+	listFix := func(l []string) []*struct {
+		from string
+		to   string
+		perm os.FileMode
+	} {
+		ret := make([]*struct {
+			from string
+			to   string
+			perm os.FileMode
+		}, len(l))
+
+		for i := range l {
+			ret[i] = new(struct {
+				from string
+				to   string
+				perm os.FileMode
+			})
+			ret[i].from = l[i]
+			ret[i].to = filepath.Join(libPath, l[i][4:]) // lib/...
+			ret[i].perm = 0664
+		}
+		return ret
+	}
+
+	list := listFix([]string{
+		"lib/build.gradle",
+		"lib/consumer-rules.pro",
+		"lib/proguard-rules.pro",
+	})
+
+	if err = boxCopyAll(list, box); err != nil {
+		return
+	}
+
+	if err = boxCopyTemplate(box, "lib/src/main/AndroidManifest.xml",
+		filepath.Join(libPath, "src/main/AndroidManifest.xml"), 0664,
+		map[string]string{"PackageName": lib.Package}); err != nil {
+		return
+	}
+
+	if err = appendSubProject(filepath.Join(workspace, "../settings.gradle"), libPath); err != nil {
+		return
+	}
+
+	return
+}
+
 type ApplicationPro struct {
 	Name  string
 	AppID string
@@ -39,13 +118,11 @@ func MakeAndroidApplication(dir string, app ApplicationPro) error {
 		return err
 	}
 
-	if err := os.MkdirAll(filepath.Join(appPath, "libs"), 0775); err != nil {
-		return err
-	}
-	if err := os.MkdirAll(filepath.Join(appPath, "src/androidTest/java"), 0775); err != nil {
-		return err
-	}
-	if err := os.MkdirAll(filepath.Join(appPath, "src/test/java"), 0775); err != nil {
+	if err := makeDirs(
+		filepath.Join(appPath, "libs"),
+		filepath.Join(appPath, "src/androidTest/java"),
+		filepath.Join(appPath, "src/test/java"),
+	); err != nil {
 		return err
 	}
 

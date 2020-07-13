@@ -23,6 +23,9 @@ func main() {
 	case "newapp":
 		makeAndroidApplication(os.Args[2:])
 
+	case "newlib":
+		makeAndroidLibrary(os.Args[2:])
+
 	default:
 		fmt.Fprintln(os.Stderr, "Unknown sub-command:", strconv.Quote(os.Args[1]))
 	}
@@ -70,6 +73,28 @@ func makeAndroidApplication(args []string) {
 		name = filepath.Base(relativePath)
 	}
 	if err := fa.MakeAndroidApplication(dir, fa.ApplicationPro{Name: name, AppID: appID, Path: relativePath}); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func makeAndroidLibrary(args []string) {
+	libFlagSet := flag.NewFlagSet("fuckandroid newlib", flag.ExitOnError)
+	var dir string
+	var packageName string
+	var relativePath string
+	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
+	libFlagSet.StringVar(&packageName, "pkg", "com.demo.app", "Java package name for library")
+	libFlagSet.Parse(args)
+
+	appArgs := libFlagSet.Args()
+	if len(appArgs) == 0 {
+		fmt.Fprintln(os.Stderr, "Sub-command `newlib` need a `relativePath`")
+		libFlagSet.PrintDefaults()
+		os.Exit(1)
+	}
+	relativePath = appArgs[0]
+	if err := fa.MakeAndroidLibrary(dir, fa.LibraryPro{Package: packageName, Path: relativePath}); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

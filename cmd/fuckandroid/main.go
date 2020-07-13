@@ -16,33 +16,40 @@ func main() {
 		os.Exit(1)
 	}
 
-	switch os.Args[1] {
+	var cmd string
+	switch cmd = os.Args[1]; cmd {
 	case "init":
-		makeWorkspace(os.Args[2:])
+		makeWorkspace(os.Args[2:], cmd)
 
-	case "newapp":
-		makeAndroidApplication(os.Args[2:])
+	case "app":
+		makeAndroidApplication(os.Args[2:], cmd)
 
-	case "newlib":
-		makeAndroidLibrary(os.Args[2:])
+	case "lib":
+		makeAndroidLibrary(os.Args[2:], cmd)
 
-	case "newjavalib":
-		makeJavaLibrary(os.Args[2:])
+	case "javalib":
+		makePlainLibrary(os.Args[2:], cmd, false)
+
+	case "kotlinlib":
+		makePlainLibrary(os.Args[2:], cmd, true)
 
 	default:
 		fmt.Fprintln(os.Stderr, "Unknown sub-command:", strconv.Quote(os.Args[1]))
+		os.Exit(1)
 	}
+
+	//fmt.Printf("fuckandroid %s finished without error.\n", cmd)
 }
 
-func makeWorkspace(args []string) {
-	initFlagSet := flag.NewFlagSet("fuckandroid init", flag.ExitOnError)
+func makeWorkspace(args []string, cmd string) {
+	initFlagSet := flag.NewFlagSet(fmt.Sprintf("fuckandroid %s", cmd), flag.ExitOnError)
 	var dir string
 	initFlagSet.StringVar(&dir, "p", ".", "Root workspace's parent directory path")
 	initFlagSet.Parse(args)
 
 	initArgs := initFlagSet.Args()
 	if len(initArgs) == 0 {
-		fmt.Fprintln(os.Stderr, "Sub-command `init` need a `name`")
+		fmt.Fprintf(os.Stderr, "Sub-command `%s` need a `name`\n", cmd)
 		initFlagSet.PrintDefaults()
 		os.Exit(1)
 	}
@@ -54,8 +61,8 @@ func makeWorkspace(args []string) {
 	}
 }
 
-func makeAndroidApplication(args []string) {
-	appFlagSet := flag.NewFlagSet("fuckandroid newapp", flag.ExitOnError)
+func makeAndroidApplication(args []string, cmd string) {
+	appFlagSet := flag.NewFlagSet(fmt.Sprintf("fuckandroid %s", cmd), flag.ExitOnError)
 	var dir string
 	var name string
 	var appID string
@@ -67,7 +74,7 @@ func makeAndroidApplication(args []string) {
 
 	appArgs := appFlagSet.Args()
 	if len(appArgs) == 0 {
-		fmt.Fprintln(os.Stderr, "Sub-command `newapp` need a `relativePath`")
+		fmt.Fprintf(os.Stderr, "Sub-command `%s` need a `relativePath`\n", cmd)
 		appFlagSet.PrintDefaults()
 		os.Exit(1)
 	}
@@ -81,8 +88,8 @@ func makeAndroidApplication(args []string) {
 	}
 }
 
-func makeAndroidLibrary(args []string) {
-	libFlagSet := flag.NewFlagSet("fuckandroid newlib", flag.ExitOnError)
+func makeAndroidLibrary(args []string, cmd string) {
+	libFlagSet := flag.NewFlagSet(fmt.Sprintf("fuckandroid %s", cmd), flag.ExitOnError)
 	var dir string
 	var packageName string
 	var relativePath string
@@ -92,7 +99,7 @@ func makeAndroidLibrary(args []string) {
 
 	appArgs := libFlagSet.Args()
 	if len(appArgs) == 0 {
-		fmt.Fprintln(os.Stderr, "Sub-command `newlib` need a `relativePath`")
+		fmt.Fprintf(os.Stderr, "Sub-command `%s` need a `relativePath`\n", cmd)
 		libFlagSet.PrintDefaults()
 		os.Exit(1)
 	}
@@ -103,8 +110,8 @@ func makeAndroidLibrary(args []string) {
 	}
 }
 
-func makeJavaLibrary(args []string) {
-	libFlagSet := flag.NewFlagSet("fuckandroid newjavalib", flag.ExitOnError)
+func makePlainLibrary(args []string, cmd string, kotlin bool) {
+	libFlagSet := flag.NewFlagSet(fmt.Sprintf("fuckandroid %s", cmd), flag.ExitOnError)
 	var dir string
 	var relativePath string
 	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
@@ -112,12 +119,12 @@ func makeJavaLibrary(args []string) {
 
 	appArgs := libFlagSet.Args()
 	if len(appArgs) == 0 {
-		fmt.Fprintln(os.Stderr, "Sub-command `newjavalib` need a `relativePath`")
+		fmt.Fprintf(os.Stderr, "Sub-command `%s` need a `relativePath`\n", cmd)
 		libFlagSet.PrintDefaults()
 		os.Exit(1)
 	}
 	relativePath = appArgs[0]
-	if err := fa.MakeJavaLibrary(dir, relativePath); err != nil {
+	if err := fa.MakePlainLibrary(dir, relativePath, kotlin); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

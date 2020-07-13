@@ -9,7 +9,7 @@ import (
 	rice "github.com/GeertJohan/go.rice"
 )
 
-func MakeJavaLibrary(dir, path string) (err error) {
+func MakePlainLibrary(dir, path string, kotlin bool) (err error) {
 	if filepath.IsAbs(path) {
 		return fmt.Errorf("%q is absolute path", path)
 	}
@@ -39,7 +39,12 @@ func MakeJavaLibrary(dir, path string) (err error) {
 		return
 	}
 
-	if err = boxCopy(box, "javalib/build.gradle", filepath.Join(libPath, "build.gradle"), 0664); err != nil {
+	var from = "javalib/build.gradle"
+	if kotlin {
+		from = "kotlinlib/build.gradle"
+	}
+
+	if err = boxCopy(box, from, filepath.Join(libPath, "build.gradle"), 0664); err != nil {
 		return
 	}
 

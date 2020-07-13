@@ -124,3 +124,32 @@ $ ./gradlew installDebug
 如图：
 
 ![alt Android设备截图](doc/device-img.png)
+
+### 3. 创建 Android Library 子工程
+
+```bash
+$ fuckandroid newlib [-p 包含 workspace 目录路径] [-pkg Java 包名] projectPath
+```
+
+例如
+
+```bash
+$ fuckandroid newlib mylib
+$ tree -p workspace/mylib
+workspace/mylib
+├── [-rw-rw-r--]  build.gradle
+├── [-rw-rw-r--]  consumer-rules.pro
+├── [drwxrwxr-x]  libs
+├── [-rw-rw-r--]  proguard-rules.pro
+└── [drwxrwxr-x]  src
+    ├── [drwxrwxr-x]  androidTest
+    │   └── [drwxrwxr-x]  java
+    ├── [drwxrwxr-x]  main
+    │   ├── [-rw-rw-r--]  AndroidManifest.xml
+    │   └── [drwxrwxr-x]  java
+    └── [drwxrwxr-x]  test
+        └── [drwxrwxr-x]  java
+
+8 directories, 4 files
+```
+

@@ -84,7 +84,7 @@ func makeAndroidLibrary(args []string) {
 	var packageName string
 	var relativePath string
 	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
-	libFlagSet.StringVar(&packageName, "pkg", "com.demo.app", "Java package name for library")
+	libFlagSet.StringVar(&packageName, "pkg", "com.demo.lib", "Java package name for library")
 	libFlagSet.Parse(args)
 
 	appArgs := libFlagSet.Args()

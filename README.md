@@ -27,10 +27,12 @@ $ ./install.sh
 $ fuckandroid init [-p 父目录路径] workspaceName
 ```
 
-即可创建如下 Android 工作区：
+例如
 
 ```bash
-.
+$ fuckandroid init hello
+$ tree -p hello/
+hello/
 ├── [-rw-rw-r--]  build.gradle
 ├── [drwxrwxr-x]  buildsystem
 ├── [drwxrwxr-x]  gradle
@@ -43,6 +45,8 @@ $ fuckandroid init [-p 父目录路径] workspaceName
 ├── [-rw-rw-r--]  local.properties
 ├── [-rw-rw-r--]  settings.gradle
 └── [drwxrwxr-x]  workspace
+
+4 directories, 8 files
 ```
 
 - buildsystem：存放各种脚本文件以及配置文件

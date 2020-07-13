@@ -131,7 +131,7 @@ $ ./gradlew installDebug
 ### 3. 创建 Android Library 子工程
 
 ```bash
-$ fuckandroid lib [-p 包含 workspace 目录路径] [-pkg Java 包名] projectPath
+$ fuckandroid lib [-p 包含 workspace 目录路径] [-pkg Java 包名] [-nokotlin] projectPath
 ```
 
 例如

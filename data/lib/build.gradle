@@ -1,17 +1,18 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.library'{{if .Kotlin}}
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'{{end}}
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.1"
+    compileSdkVersion compile_sdk_version as int
+    buildToolsVersion build_tool_version
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        minSdkVersion min_sdk_version as int
+        targetSdkVersion target_sdk_version as int
+        versionCode version_code as int
+        versionName version_name
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
@@ -23,10 +24,10 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
+    implementation fileTree(dir: "libs", include: ["*.jar"]){{if .Kotlin}}
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"{{end}}
+    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$androidx_test_ext_junit_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_test_espresso_core_version"
 }

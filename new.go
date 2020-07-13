@@ -54,6 +54,7 @@ func MakePlainLibrary(dir, path string, kotlin bool) (err error) {
 type LibraryPro struct {
 	Package string
 	Path    string
+	Kotlin  bool
 }
 
 func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
@@ -112,7 +113,6 @@ func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
 	}
 
 	list := listFix([]string{
-		"lib/build.gradle",
 		"lib/consumer-rules.pro",
 		"lib/proguard-rules.pro",
 	})
@@ -124,6 +124,12 @@ func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
 	if err = boxCopyTemplate(box, "lib/src/main/AndroidManifest.xml",
 		filepath.Join(libPath, "src/main/AndroidManifest.xml"), 0664,
 		map[string]string{"PackageName": lib.Package}); err != nil {
+		return
+	}
+
+	if err = boxCopyTemplate(box, "lib/build.gradle",
+		filepath.Join(libPath, "build.gradle"), 0664,
+		map[string]string{"Kotlin": parseBoolean(lib.Kotlin)}); err != nil {
 		return
 	}
 

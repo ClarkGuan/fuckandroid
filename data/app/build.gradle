@@ -12,7 +12,7 @@ android {
         targetSdkVersion target_sdk_version as int
         versionCode version_code as int
         versionName version_name
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
     buildTypes {

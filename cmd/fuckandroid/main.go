@@ -10,13 +10,20 @@ import (
 	fa "github.com/ClarkGuan/fuckandroid"
 )
 
-var helpDesc = `fuckandroid sub-command args...
+var helpDesc = `使用方法：
+    fuckandroid sub-command args...
+
 sub-command 可以是：
-	init			创建指定路径的 workspace
-	app				在指定的 workspace 下创建一个 Android App 子工程
-	lib				在指定的 workspace 下创建一个 Android Library 子工程
-	plainlib		在指定的 workspace 下创建一个 Java 或者 kotlin 子工程
-	help			打印本帮主信息`
+	init      创建指定路径的 workspace
+	app       在指定的 workspace 下创建一个 Android App 子工程
+	lib       在指定的 workspace 下创建一个 Android Library 子工程
+	plainlib  在指定的 workspace 下创建一个 Java 或者 kotlin 子工程
+	help      打印本帮主信息
+
+打印 sub-command 的帮助信息：
+    fuckandroid sub-command --help
+例如
+    fuckandroid init --help`
 
 func main() {
 	if len(os.Args) < 2 {
@@ -38,7 +45,7 @@ func main() {
 	case "plainlib":
 		makePlainLibrary(os.Args[2:], cmd)
 
-	case "help", "-h", "--help", "--h":
+	case "help", "-help", "-h", "--help", "--h":
 		printHelpDesc()
 
 	default:

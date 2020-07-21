@@ -15,5 +15,4 @@
 # vendor/
 .idea
 go.sum
-~data/
 rice-box.go

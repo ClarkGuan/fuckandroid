@@ -159,13 +159,13 @@ workspace/mylib
 ### 4. 创建 Java or Kotlin Library 子工程
 
 ```bash
-$ fuckandroid noandroidlib [-p 包含 workspace 目录路径] [-nokotlin] projectPath
+$ fuckandroid plainlib [-p 包含 workspace 目录路径] [-nokotlin] projectPath
 ```
 
 例如
 
 ```bash
-$ fuckandroid noandroidlib -nokotlin myjavalib
+$ fuckandroid plainlib -nokotlin myjavalib
 $ tree -p workspace/myjavalib/
 workspace/myjavalib/
 ├── [-rw-rw-r--]  build.gradle

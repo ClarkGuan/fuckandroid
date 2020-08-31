@@ -15,6 +15,15 @@ android {
         consumerProguardFiles 'consumer-rules.pro'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+{{if .Kotlin}}
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }{{end}}
+
     buildTypes {
         release {
             minifyEnabled false

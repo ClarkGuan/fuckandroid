@@ -306,7 +306,8 @@ func appendSubProject(filename, subProPath string) error {
 func gradleDir(s string) string {
 	index := strings.Index(s, "workspace")
 	s = s[index:]
-	return strings.ReplaceAll(s, "/", ":")
+	// Unix for '/'  Windows for '\\'
+	return strings.ReplaceAll(s, "/\\", ":")
 }
 
 func parseBoolean(b bool) string {

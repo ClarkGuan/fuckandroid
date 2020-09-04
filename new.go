@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	rice "github.com/GeertJohan/go.rice"
@@ -308,10 +307,7 @@ func gradleDir(s string) string {
 	index := strings.Index(s, "workspace")
 	s = s[index:]
 	// Unix for '/'  Windows for '\\'
-	if runtime.GOOS == "windows" {
-		return strings.ReplaceAll(s, "\\", ":")
-	}
-	return strings.ReplaceAll(s, "/", ":")
+	return strings.ReplaceAll(s, string(os.PathSeparator), ":")
 }
 
 func parseBoolean(b bool) string {

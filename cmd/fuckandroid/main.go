@@ -91,7 +91,7 @@ func makeAndroidApplication(args []string, cmd string) {
 	appFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
 	appFlagSet.StringVar(&name, "name", "", "Display name of application")
 	appFlagSet.StringVar(&appID, "id", "com.demo.app", "Id of android application. Default: \"com.demo.app\"")
-	appFlagSet.BoolVar(&kotlin, "kotlin", false, "not using kotlin")
+	appFlagSet.BoolVar(&kotlin, "kotlin", false, "using kotlin")
 	appFlagSet.Parse(args)
 
 	appArgs := appFlagSet.Args()
@@ -118,7 +118,7 @@ func makeAndroidLibrary(args []string, cmd string) {
 	var kotlin bool
 	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
 	libFlagSet.StringVar(&packageName, "pkg", "com.demo.lib", "Java package name for library. Default: \"com.demo.lib\"")
-	libFlagSet.BoolVar(&kotlin, "kotlin", false, "not using kotlin")
+	libFlagSet.BoolVar(&kotlin, "kotlin", false, "using kotlin")
 	libFlagSet.Parse(args)
 
 	appArgs := libFlagSet.Args()
@@ -140,7 +140,7 @@ func makePlainLibrary(args []string, cmd string) {
 	var kotlin bool
 	var relativePath string
 	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
-	libFlagSet.BoolVar(&kotlin, "kotlin", false, "not using kotlin")
+	libFlagSet.BoolVar(&kotlin, "kotlin", false, "using kotlin")
 	libFlagSet.Parse(args)
 
 	appArgs := libFlagSet.Args()

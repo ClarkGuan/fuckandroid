@@ -87,11 +87,11 @@ func makeAndroidApplication(args []string, cmd string) {
 	var name string
 	var appID string
 	var relativePath string
-	var nokotlin bool
+	var kotlin bool
 	appFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
 	appFlagSet.StringVar(&name, "name", "", "Display name of application")
 	appFlagSet.StringVar(&appID, "id", "com.demo.app", "Id of android application. Default: \"com.demo.app\"")
-	appFlagSet.BoolVar(&nokotlin, "nokotlin", false, "not using kotlin")
+	appFlagSet.BoolVar(&kotlin, "kotlin", false, "not using kotlin")
 	appFlagSet.Parse(args)
 
 	appArgs := appFlagSet.Args()
@@ -104,7 +104,7 @@ func makeAndroidApplication(args []string, cmd string) {
 	if len(name) == 0 {
 		name = filepath.Base(relativePath)
 	}
-	if err := fa.MakeAndroidApplication(dir, fa.ApplicationPro{Name: name, AppID: appID, Path: relativePath, Kotlin: !nokotlin}); err != nil {
+	if err := fa.MakeAndroidApplication(dir, fa.ApplicationPro{Name: name, AppID: appID, Path: relativePath, Kotlin: kotlin}); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -115,10 +115,10 @@ func makeAndroidLibrary(args []string, cmd string) {
 	var dir string
 	var packageName string
 	var relativePath string
-	var nokotlin bool
+	var kotlin bool
 	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
 	libFlagSet.StringVar(&packageName, "pkg", "com.demo.lib", "Java package name for library. Default: \"com.demo.lib\"")
-	libFlagSet.BoolVar(&nokotlin, "nokotlin", false, "not using kotlin")
+	libFlagSet.BoolVar(&kotlin, "kotlin", false, "not using kotlin")
 	libFlagSet.Parse(args)
 
 	appArgs := libFlagSet.Args()
@@ -128,7 +128,7 @@ func makeAndroidLibrary(args []string, cmd string) {
 		os.Exit(1)
 	}
 	relativePath = appArgs[0]
-	if err := fa.MakeAndroidLibrary(dir, fa.LibraryPro{Package: packageName, Path: relativePath, Kotlin: !nokotlin}); err != nil {
+	if err := fa.MakeAndroidLibrary(dir, fa.LibraryPro{Package: packageName, Path: relativePath, Kotlin: kotlin}); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
@@ -137,10 +137,10 @@ func makeAndroidLibrary(args []string, cmd string) {
 func makePlainLibrary(args []string, cmd string) {
 	libFlagSet := flag.NewFlagSet(fmt.Sprintf("fuckandroid %s", cmd), flag.ExitOnError)
 	var dir string
-	var nokotlin bool
+	var kotlin bool
 	var relativePath string
 	libFlagSet.StringVar(&dir, "p", ".", "Path to search workspace")
-	libFlagSet.BoolVar(&nokotlin, "nokotlin", false, "not using kotlin")
+	libFlagSet.BoolVar(&kotlin, "kotlin", false, "not using kotlin")
 	libFlagSet.Parse(args)
 
 	appArgs := libFlagSet.Args()
@@ -150,7 +150,7 @@ func makePlainLibrary(args []string, cmd string) {
 		os.Exit(1)
 	}
 	relativePath = appArgs[0]
-	if err := fa.MakePlainLibrary(dir, relativePath, !nokotlin); err != nil {
+	if err := fa.MakePlainLibrary(dir, relativePath, kotlin); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

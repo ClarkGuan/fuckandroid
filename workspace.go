@@ -82,5 +82,5 @@ func androidHome() string {
 	}
 	homeDir, _ := os.UserHomeDir()
 	// TODO 默认路径
-	return filepath.Join(homeDir, "Android/Sdk")
+	return filepath.Join(homeDir, "Android/sdk")
 }

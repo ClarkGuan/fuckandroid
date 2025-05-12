@@ -1,42 +1,43 @@
-apply plugin: 'com.android.library'{{if .Kotlin}}
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'{{end}}
+plugins {
+    alias(libs.plugins.android.library){{if .Kotlin}}
+    alias(libs.plugins.kotlin.android){{end}}
+}
 
 android {
-    compileSdkVersion compile_sdk_version as int
-    buildToolsVersion build_tool_version
+    namespace '{{.PackageName}}'
+    compileSdk 35
 
     defaultConfig {
-        minSdkVersion min_sdk_version as int
-        targetSdkVersion target_sdk_version as int
-        versionCode version_code as int
-        versionName version_name
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles 'consumer-rules.pro'
-    }
+        minSdk 22
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
-{{if .Kotlin}}
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }{{end}}
 
     buildTypes {
+        profile {}
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+{{if .Kotlin}}
+    kotlinOptions {
+        jvmTarget = '11'
+    }{{end}}
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"]){{if .Kotlin}}
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"{{end}}
-    implementation "androidx.appcompat:appcompat:$androidx_appcompat_version"
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$androidx_test_ext_junit_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidx_test_espresso_core_version"
+    implementation libs.appcompat
+    implementation libs.material{{if .Kotlin}}
+    implementation libs.core.ktx
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android{{end}}
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
 }

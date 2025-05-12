@@ -52,6 +52,7 @@ func MakeWorkspace(name, dir string) (err error) {
 	}{
 		{"gradle/wrapper/gradle-wrapper.jar", 0664},
 		{"gradle/wrapper/gradle-wrapper.properties", 0664},
+		{"gradle/libs.versions.toml", 0664},
 		{".gitignore", 0664},
 		{"build.gradle", 0664},
 		{"gradle.properties", 0664},

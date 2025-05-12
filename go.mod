@@ -1,5 +1,7 @@
 module github.com/ClarkGuan/fuckandroid
 
-go 1.10
+go 1.24
 
-require github.com/GeertJohan/go.rice v1.0.0
+require github.com/GeertJohan/go.rice v1.0.3
+
+require github.com/daaku/go.zipexe v1.0.2 // indirect

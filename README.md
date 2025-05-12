@@ -5,7 +5,7 @@
 fuckandroid 依赖 go.rice，需要安装
 
 ```bash
-$ go get -u github.com/GeertJohan/go.rice/...
+$ go install github.com/GeertJohan/go.rice/rice@latest
 ```
 
 然后

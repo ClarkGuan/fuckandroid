@@ -81,9 +81,11 @@ func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
 
 	if err = makeDirs(
 		filepath.Join(libPath, "libs"),
+		filepath.Join(libPath, "sym"),
 		filepath.Join(libPath, "src/androidTest/java"),
 		filepath.Join(libPath, "src/test/java"),
 		filepath.Join(libPath, "src/main/java"),
+		filepath.Join(libPath, "src/main/jniLibs/arm64-v8a"),
 	); err != nil {
 		return
 	}
@@ -129,7 +131,7 @@ func MakeAndroidLibrary(dir string, lib LibraryPro) (err error) {
 
 	if err = boxCopyTemplate(box, "lib/build.gradle",
 		filepath.Join(libPath, "build.gradle"), 0664,
-		map[string]string{"Kotlin": parseBoolean(lib.Kotlin)}); err != nil {
+		map[string]string{"Kotlin": parseBoolean(lib.Kotlin), "PackageName": lib.Package}); err != nil {
 		return
 	}
 
@@ -179,6 +181,7 @@ func MakeAndroidApplication(dir string, app ApplicationPro) error {
 		filepath.Join(appPath, "libs"),
 		filepath.Join(appPath, "src/androidTest/java"),
 		filepath.Join(appPath, "src/test/java"),
+		filepath.Join(appPath, "src/main/jniLibs/arm64-v8a"),
 	); err != nil {
 		return err
 	}

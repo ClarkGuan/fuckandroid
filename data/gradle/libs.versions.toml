@@ -4,9 +4,9 @@ junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
-kotlinxCoroutines = "1.7.3"
 material = "1.10.0"
-kotlin = "1.9.20"
+kotlin = "1.9.25"
+kotlinxCoroutines = "1.7.3"
 coreKtx = "1.10.1"
 
 [libraries]
